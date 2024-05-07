@@ -9,6 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Optional;
+
 import cdc2.entities.Coche;
 import cdc2.model.JPACocheDao;
 
@@ -68,7 +71,28 @@ class JPACocheDaoTest {
 	@DisplayName("Verifica el método para devolver todos los coches")
 	@Test
 	void testFindAll() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
+		log.info('\n'+"------Entro en el m�todo para probar el m�todo findAll-----"+'\n');
+		
+		undertest.save(coche1);
+		log.info("Persisto el primer ejemplar "+coche1+'\n');
+		List<Coche> items = undertest.findAll();
+		log.info("encontrados: "+items);
+		assertTrue(items.size()==1,"He metido un ejemplar pero hay "+items.size());
+		
+		
+		
+		undertest.save(coche2);
+		log.info("Persisto el segundo ejemplar "+coche2+'\n');
+		log.info("Busco todos los ejemplares");
+		items = undertest.findAll();
+		assertTrue(items.size()==2,"He metido dos ejemplares pero hay "+items.size());
+		
+		undertest.save(coche3);
+		log.info("Persisto el tercer ejemplar "+coche3+'\n');
+		log.info("Busco todos los ejemplares");
+		items = undertest.findAll();
+		assertTrue(items.size()==3,"He metido tres ejemplares pero hay "+items.size());
 	}
 
 	@DisplayName("Verifica el método la introducción de varios coches a la vez")
@@ -101,7 +125,25 @@ class JPACocheDaoTest {
 	@DisplayName("Verifica el método para eliminar un coche")
 	@Test
 	void testDeleteCoche() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
+log.info("Entro en el m�todo para probar el m�todo delete (Item)");
+		
+		undertest.save(coche1);
+		log.info("Persisto "+coche1);
+		Optional<Coche> recuperado = Optional.ofNullable(undertest.findById(coche1.getId()));	
+		if(recuperado.isPresent()){
+			log.info("El ejemplar est�, lo voy a eliminar");		
+			
+			undertest.delete(recuperado.get());
+		}else {
+			fail("No se ha recuperado bien el ejemplar");
+		}
+		
+		log.info("Lo vuelvo a buscar y ahora no deber�a estar");
+		
+		recuperado = Optional.ofNullable(undertest.findById(coche1.getId()));	
+	
+		assertFalse(recuperado.isPresent(),"El ejemplar lo hab�a borrado, no puedo recuperarlo");
 	}
 
 }
